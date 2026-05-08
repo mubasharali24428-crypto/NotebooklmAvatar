@@ -1,8 +1,18 @@
 openapi: 3.0.3
 info:
   title: AvatarLM API
-  version: 0.1.0
+  version: 1.0.0
 paths:
+  /api/v1/health:
+    get:
+      summary: Service health check
+      responses:
+        "200":
+          description: Backend health payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
   /api/v1/explainer:
     post:
       summary: Generate an emotion-aware video explainer package
@@ -20,6 +30,10 @@ paths:
       responses:
         "200":
           description: Explainer package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExplainerResponse"
   /api/v1/podcast:
     post:
       summary: Generate multi-avatar dialogue and scene instructions
@@ -33,9 +47,35 @@ paths:
               properties:
                 topic: { type: string }
                 scene: { type: string }
+                emotion: { type: string }
       responses:
         "200":
           description: Podcast package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExplainerResponse"
+  /api/v1/infographic:
+    post:
+      summary: Generate infographic breakdown and avatar interaction cues
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topic]
+              properties:
+                topic: { type: string }
+                scene: { type: string }
+                emotion: { type: string }
+      responses:
+        "200":
+          description: Infographic package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InfographicResponse"
   /api/v1/quiz:
     post:
       summary: Generate quiz and supervisor mode configuration
@@ -48,6 +88,56 @@ paths:
               required: [topicText]
               properties:
                 topicText: { type: string }
+                durationSeconds: { type: integer, minimum: 60, maximum: 7200 }
       responses:
         "200":
           description: Quiz and invigilator package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizResponse"
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status: { type: string }
+        service: { type: string }
+        version: { type: string }
+    ProcessingMetadata:
+      type: object
+      properties:
+        mode: { type: string }
+        model_provider: { type: string }
+        pipeline_version: { type: string }
+    RenderPackage:
+      type: object
+      properties:
+        script: { type: string }
+        voice: { type: object, additionalProperties: { type: string } }
+        animation_states: { type: array, items: { type: string } }
+        scene: { type: object, additionalProperties: true }
+        emotion: { type: object, additionalProperties: true }
+        dialogue:
+          type: array
+          items:
+            type: object
+            additionalProperties: { type: string }
+    ExplainerResponse:
+      type: object
+      properties:
+        metadata: { $ref: "#/components/schemas/ProcessingMetadata" }
+        explanation: { type: object, additionalProperties: true }
+        render: { $ref: "#/components/schemas/RenderPackage" }
+    InfographicResponse:
+      type: object
+      properties:
+        metadata: { $ref: "#/components/schemas/ProcessingMetadata" }
+        infographic: { type: object, additionalProperties: true }
+        render: { $ref: "#/components/schemas/RenderPackage" }
+    QuizResponse:
+      type: object
+      properties:
+        metadata: { $ref: "#/components/schemas/ProcessingMetadata" }
+        quiz: { type: object, additionalProperties: true }
+        supervisor: { type: object, additionalProperties: true }
