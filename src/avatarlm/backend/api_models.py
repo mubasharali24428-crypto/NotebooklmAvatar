@@ -26,11 +26,8 @@ class InfographicRequest(BaseModel):
 
 
 class QuizRequest(BaseModel):
-    topic_text: str = Field(alias="topicText", min_length=3)
-    duration_seconds: int = Field(default=600, ge=60, le=7200, alias="durationSeconds")
-
-    class Config:
-        populate_by_name = True
+    topicText: str = Field(min_length=3)
+    durationSeconds: int = Field(default=600, ge=60, le=7200)
 
 
 class ProcessingMetadata(BaseModel):
@@ -70,4 +67,3 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     version: str
-

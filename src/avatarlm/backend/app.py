@@ -46,11 +46,10 @@ def create_app() -> FastAPI:
 
     @app.post("/api/v1/quiz", response_model=QuizResponse, tags=["learning"])
     def quiz(request: QuizRequest) -> QuizResponse:
-        payload = service.quiz(topic_text=request.topic_text, duration_seconds=request.duration_seconds)
+        payload = service.quiz(topic_text=request.topicText, duration_seconds=request.durationSeconds)
         return QuizResponse(**payload)
 
     return app
 
 
 app = create_app()
-
