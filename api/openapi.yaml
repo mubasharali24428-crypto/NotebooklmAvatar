@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: AvatarLM API
+  version: 0.1.0
+paths:
+  /api/v1/explainer:
+    post:
+      summary: Generate an emotion-aware video explainer package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topic, emotion, scene]
+              properties:
+                topic: { type: string }
+                emotion: { type: string }
+                scene: { type: string }
+      responses:
+        "200":
+          description: Explainer package
+  /api/v1/podcast:
+    post:
+      summary: Generate multi-avatar dialogue and scene instructions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topic, scene]
+              properties:
+                topic: { type: string }
+                scene: { type: string }
+      responses:
+        "200":
+          description: Podcast package
+  /api/v1/quiz:
+    post:
+      summary: Generate quiz and supervisor mode configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topicText]
+              properties:
+                topicText: { type: string }
+      responses:
+        "200":
+          description: Quiz and invigilator package
