@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.vcc-*/
+shorts/
+*.mp4
